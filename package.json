@@ -1,0 +1,24 @@
+{
+  "name": "vue-ssr-seed",
+  "version": "1.0.0",
+  "description": "vue ssr seed project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muzi131313/vue-ssr-seed.git"
+  },
+  "keywords": [
+    "vue",
+    "ssr",
+    "seed"
+  ],
+  "author": "roastwind",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muzi131313/vue-ssr-seed/issues"
+  },
+  "homepage": "https://github.com/muzi131313/vue-ssr-seed#readme"
+}
