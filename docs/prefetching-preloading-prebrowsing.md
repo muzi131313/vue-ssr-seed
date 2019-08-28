@@ -41,7 +41,7 @@
 <link rel="subresource" href="styles.css">
 ```
 [根据网络文档](https://www.chromium.org/spdy/link-headers-and-server-hint/link-rel-subresource)，它像这样工作：
-> “LINK rel=subresource”从`LINK rel=prefetch`使用不同的语义提供一个新链接关系类型。当`rel=prefetch`在随后的页面提供一个低优先级瞎子资源，`rel=subresource`可以尽可能早的在当前页面加载资源。
+> “LINK rel=subresource”从`LINK rel=prefetch`使用不同的语义提供一个新链接关系类型。当`rel=prefetch`在随后的页面提供一个低优先级下载资源，`rel=subresource`可以尽可能早的在当前页面加载资源。
 
 所以：如果资源在当前页面需要，或则如果尽可能快的需要，然后可能用`subresource`更好一些，而不是使用`prefetch`
 
