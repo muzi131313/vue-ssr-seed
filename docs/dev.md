@@ -1,36 +1,54 @@
-const fs = require('fs')
-const path = require('path')
-const MFS = require('memory-fs')
-const chokidar = require('chokidar')
-const webpack = require('webpack')
-
-const clientConfig = require('./webpack.client.config')
-const serverConfig = require('./webpack.server.config')
-
-const readFile = (fs, file) => {
-  try {
-    return fs.readFileSync(path.join(clientConfig.output.path, file), 'utf-8')
-  }
-  catch (e) { console.error(e) }
-}
-
-module.exports = function setupDevServer(app, templatePath, cb) {
-  let bundle
-  let template
-  let clientManifest
-
-  let ready
+## 开发环境
+### 更新
+- `setup-dev-server` 中监听更新代码
+  ```
   const readyPromise = new Promise(resolve => ready = resolve)
   const update = () => {
     if (bundle && clientManifest) {
+      // 触发 readyPromise
       ready()
+      // 回调函数，返回最新的 bundle，template，clientManifest
       cb(bundle, {
         template,
         clientManifest
       })
     }
   }
+  ```
+- `server/index.js` 中代码
+  ```
+  readyPromise = setupDevServer(app, templatePath, (bundle, options) => {
+    try {
+      // update() 中的cb，Promise().then() 触发 microtask，所以 cb 触发会在 render() 函数之前
+      /** 验证示例
+        var a = function(cb) {
+          return flag => new Promise(resolve => {
+            if (flag) {
+              resolve()
+              cb()
+            }
+          })
+        }
+        var b = a(() => { console.log('callback') })
+        b(true).then(() => {
+          console.log('resolve')
+        })
+       */
+      renderer = createRenderer(bundle, options)
+    }
+    catch (e) {
+      console.log('createRenderer exits error: ', e)
+    }
+  })
+  app.get('*', (req, res) => {
+    // readyPromise被触发后，就更新页面(render是更新页面的操作)
+    readyPromise.then(() => render(req, res))
+  })
+  ```
 
+### 渲染模板监听模板变动
+- 代码
+  ```
   template = fs.readFileSync(templatePath, 'utf-8')
   chokidar
     .watch(templatePath)
@@ -39,16 +57,28 @@ module.exports = function setupDevServer(app, templatePath, cb) {
       console.log('index.html template updated.')
       update()
     })
+  ```
 
-  // modify client config to work with hot middleware
+### 热更新 webpack 配置变更
+- 代码
+  ```
   clientConfig.entry.app = [ 'webpack-hot-middleware/client', clientConfig.entry.app ]
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   )
+  ```
 
-  // dev 中间件
+### 热更新插件形式支持
+- 代码
+  ```
+  app.use(require('webpack-hot-middleware')(clientCompiler, { heartbeat: 5000 }))
+  ```
+
+### 客户端 bundle 变动监听
+- 代码
+  ```
   const clientCompiler = webpack(clientConfig)
   const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
@@ -63,11 +93,11 @@ module.exports = function setupDevServer(app, templatePath, cb) {
     clientManifest = JSON.parse(readFile(devMiddleware.fileSystem, 'vue-ssr-client-manifest.json'))
     update()
   })
+  ```
 
-  // hot 中间件
-  app.use(require('webpack-hot-middleware')(clientCompiler, { heartbeat: 5000 }))
-
-  // watch and update server renderer
+### 服务端 bundle 变动监听
+- 代码
+  ```
   const serverCompiler = webpack(serverConfig)
   const mfs = new MFS()
   serverCompiler.outputFileSystem = mfs
@@ -81,5 +111,8 @@ module.exports = function setupDevServer(app, templatePath, cb) {
     bundle = JSON.parse(readFile(mfs, 'vue-ssr-server-bundle.json'))
     update()
   })
-  return readyPromise
-}
+  ```
+
+## 参考资料
+- [vue-hackernews-2.0#server.js](https://github.com/vuejs/vue-hackernews-2.0/blob/master/server.js)
+- [vue-hackernews-2.0#build/setup-dev-server.js](https://github.com/vuejs/vue-hackernews-2.0/blob/master/build/setup-dev-server.js)

@@ -24,6 +24,7 @@ module.exports = {
     }
   },
   performance: {
+    // 关闭提示
     hints: false
   },
   module: {

@@ -13,6 +13,7 @@ const config = merge(base, {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"client"'
     }),
+    // `vue-ssr-client-manifest.json`
     new VueSSRClientPlugin()
   ]
 })
