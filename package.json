@@ -4,6 +4,7 @@
   "description": "vue ssr seed project",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,13 @@
   "bugs": {
     "url": "https://github.com/muzi131313/vue-ssr-seed/issues"
   },
-  "homepage": "https://github.com/muzi131313/vue-ssr-seed#readme"
+  "homepage": "https://github.com/muzi131313/vue-ssr-seed#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "vue": "^2.6.10",
+    "vue-server-renderer": "^2.6.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
 }
