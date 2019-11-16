@@ -2,8 +2,10 @@
 ### 数据响应
 - 服务端渲染
   - 每个请求都是单独的、全新的应用实例
+    - 原因：避免 **交叉请求** 造成的状态污染
     - 推荐做法：避免单例，使用工厂函数
-    - 原因：避免交叉请求造成的状态污染
+    - 不推荐做法：使用 `runInNewContext: true`
+      - 为每一个请求创建 vm 上下文, 伴随显著的性能开销
   - 实际渲染确定型
     - 预渲染：开始渲染时，应用程序就将其解析完成其状态
       - 默认禁用响应式数据
@@ -27,3 +29,14 @@
   - 不容易替换组件
     - 服务端 renderer 使用 [directives](https://ssr.vuejs.org/zh/api/#directives) 选项
       - 示例: [v-show](https://github.com/vuejs/vue/blob/dev/src/platforms/web/server/directives/show.js)
+
+## 打包
+### 服务端打包
+- 服务端渲染：需要打包成 **服务器 bundle**
+
+### 客户端打包
+- 客户端渲染：需要打包生成 **客户端 bundle** 发送给浏览器，用于 *混合静态标记*
+
+## 版本列表
+- [simple version](https://github.com/muzi131313/vue-ssr-seed/tree/8e4bcb6575a457fe971d4773ffd323c635554ee4): 最简单的版本
+- []()

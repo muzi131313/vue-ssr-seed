@@ -1,3 +1,7 @@
+require('@babel/register')({
+  presets: ['@babel/preset-env']
+})
+
 const fs = require('fs')
 const path = require('path')
 const Vue = require('vue')
@@ -6,15 +10,10 @@ const renderer = require('vue-server-renderer').createRenderer({
   // 设置模板
   template: fs.readFileSync(path.resolve(__dirname, '../src/template/index.html'), 'utf-8')
 })
+const { createApp } = require('../src/app')
 
 server.get('*', (req, res) => {
-  const app = new Vue({
-    data: {
-      url: req.url
-    },
-    template: `<div>访问的 URL 是： {{ url }}</div>`
-  })
-
+  const { app } = createApp(req.url)
   const context = {
     title: 'vue-ssr-seed',
     meta: `<meta name="demo" content="demo">`
@@ -22,6 +21,7 @@ server.get('*', (req, res) => {
 
   renderer.renderToString(app, context, (err, html) => {
     if (err) {
+      console.error(err)
       res.status(500).end('Internal Server Error')
       return
     }
