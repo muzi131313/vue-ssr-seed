@@ -36,7 +36,3 @@
 
 ### 客户端打包
 - 客户端渲染：需要打包生成 **客户端 bundle** 发送给浏览器，用于 *混合静态标记*
-
-## 版本列表
-- [simple version](https://github.com/muzi131313/vue-ssr-seed/tree/8e4bcb6575a457fe971d4773ffd323c635554ee4): 最简单的版本
-- []()
