@@ -1,12 +1,12 @@
 import 'es6-promise/auto'
 import Vue from 'vue'
 import { createApp } from './app'
-// import ProgressBar from './components/ProgressBar.vue'
+import ProgressBar from './components/ProgressBar.vue'
 
 // 客户端特定引导逻辑……
 // global progress bar
-// const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
-// document.body.appendChild(bar.$el)
+const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
+document.body.appendChild(bar.$el)
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
@@ -52,7 +52,7 @@ router.onReady(() => {
     }
 
     // 触发加载指示器 (loading indicator)
-    // bar.start()
+    bar.start()
     Promise.all(activated.map(c => {
       if (c.asyncData) {
         return c.asyncData({ store, route: to })
@@ -61,7 +61,7 @@ router.onReady(() => {
       .then(() => {
 
         // 停止加载指示器 (loading indicator)
-        // bar.finish()
+        bar.finish()
 
         next()
       })

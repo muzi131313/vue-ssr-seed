@@ -34,6 +34,7 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
+          extractCSS: isProd,
           compilerOptions: {
             preserveWhitespace: false
           }
@@ -41,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: 'babel-loader?cacheDirectory',
         exclude: /node_modules/
       },
       {
