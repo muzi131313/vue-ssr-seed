@@ -4,6 +4,7 @@ const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 const resolve = _path => path.resolve(__dirname, _path)
@@ -60,6 +61,27 @@ const config = merge(base, {
         ? [
           new MiniCssExtractPlugin({
             filename: 'static/style/[name].[contenthash].css'
+          }),
+          new SWPrecachePlugin({
+            cacheId: 'vue-ssr-seed',
+            filename: 'service-worker.js',
+            minify: true,
+            dontCacheBustUrlsMatching: /./,
+            staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+            runtimeCaching: [
+              {
+                urlPattern: '/',
+                handler: 'networkFirst'
+              },
+              {
+                urlPattern: /\/(top|new|show|ask|jobs)/,
+                handler: 'networkFirst'
+              },
+              {
+                urlPattern: '/item/:id',
+                handler: 'networkFirst'
+              }
+            ]
           })
         ]
         : []

@@ -24,5 +24,6 @@ vue ssr的种子项目
   - [Vue.js 服务器端渲染指南](https://ssr.vuejs.org/zh/)
   - [prefetching-preloading-prebrowsing](./docs/prefetching-preloading-prebrowsing.md)
 - 参考项目
+  - [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0): vue-server-render 的官方示例
   - [nuxtjs](https://zh.nuxtjs.org/)
   - [vuepress](https://vuepress.vuejs.org/)

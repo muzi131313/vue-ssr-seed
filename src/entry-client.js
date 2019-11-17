@@ -71,3 +71,7 @@ router.onReady(() => {
   // 这里假定 App.vue 模板中根元素具有 `id="app"`
   app.$mount('#app')
 })
+
+if ('https:' === location.protocol && navigator.serviceWorker) {
+  navigator.serviceWorker.register('/service-worker.js')
+}
