@@ -51,17 +51,26 @@
 - 代码分割的3种做法
   - 入口起点：使用 `entry` 手动配置分离
   - 防止重复：使用 `splitChunksPlugin` 去重和分离 chunk
-    - `splitChunksPlugin`
-      - v4 版本，`CommonsChunkPlugin` 被移除，`optimization.splitChunks` 是新的api
-      - 自动分割代码的条件
-        > 实践最后两个条件时，会产生更大的 chunks
-
-        - `node_modules` 中的代码，或者新的可以共享的代码
-        - 新的 chunk 大于 30kb（min+gz之前）
-        - 最大的并行请求数量小于等于5
-        - 初始化的并行请求小于等于3
   - 动态导入：通过模块中的 **内联函数调用** 来分离代码
+- `splitChunksPlugin`
+  - v4 版本，`CommonsChunkPlugin` 被移除，`optimization.splitChunks` 是新的api
+  - 自动分割代码的条件
+    > 实践最后两个条件时，会产生更大的 chunks
+
+    - `node_modules` 中的代码，或者新的可以共享的代码
+    - 新的 chunk 大于 30kb（min+gz之前）
+    - 最大的并行请求数量小于等于5
+    - 初始化的并行请求小于等于3
 
 ## 数据预获取
 ### 服务器端数据预取
+- 对于匹配到的组件，调用组件上的 `asyncData`（如果有的话）
 ### 客户端数据预获取
+- 如果路由发生变化，则需要调用 `asyncData`，进行数据重新获取
+- 数据预取的两种方式
+  - 提前预获取
+    - 定义：路由跳转前获取数据
+    - 适应场景：数据获取时间较短，渲染模块较少
+  - 渲染后获取数据
+    - 定义：路由跳转后获取数据
+    - 适应场景：数据获取时间太长，渲染模块太多
