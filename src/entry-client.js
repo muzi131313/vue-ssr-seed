@@ -1,5 +1,6 @@
-import { createApp } from './app'
 import 'es6-promise/auto'
+import Vue from 'vue'
+import { createApp } from './app'
 // import ProgressBar from './components/ProgressBar.vue'
 
 // 客户端特定引导逻辑……
