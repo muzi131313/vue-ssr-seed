@@ -8,4 +8,5 @@
 - [webpack](./webpack.md)：客户端、服务端打包构建
 - [babel](./babel.md)：ES6语法转换
 - [dev](./dev.md)：开发模式
-- [ ] [prod](./prod.md)：生产模式
+- [ ] [prod](./prod.md)：生产模式下，服务端需要做的一些事情
+- [router](./router.md)：路由模式下，客户端路由加载模式，服务端路由处理，以及数据预获取

@@ -1,3 +1,5 @@
+## 依赖安装
+### 客户端相关
 - 安装 webpack 相关
   ```
   npm i webpack webpack-cli webpack-merge webpack-node-externals -D
@@ -10,6 +12,7 @@
   ```
   npm i friendly-errors-webpack-plugin -D
   ```
+### 服务端相关
 - 安装环境设置工具
   ```
   npm i cross-env -D
@@ -26,6 +29,7 @@
   ```
   npm i webpack-dev-middleware -D
   ```
+## 基础 webpack 配置
 - 基础 webpack 配置
   ```javascript
   module.exports = {
@@ -87,3 +91,6 @@
     ]
   }
   ```
+
+## 路由处理
+

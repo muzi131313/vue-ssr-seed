@@ -17,6 +17,7 @@ module.exports = {
     [ '@babel/plugin-transform-runtime', {
       'corejs': 3,
       'proposals': true
-    }]
+    }],
+    '@babel/plugin-syntax-dynamic-import'
   ]
 }

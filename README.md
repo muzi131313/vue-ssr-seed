@@ -14,6 +14,8 @@ vue ssr的种子项目
   - 运行构建命令：`npm run build`
 - [run-dev-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-dev-server): 开发模式下运行服务的纯净版本
   - 运行命令：`npm run dev`
+- [run-prod-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-prod-server): 生产模式下运行服务的纯净版本
+  - 运行命令：`npm run start`
 
 ## 参考资料
 - 文档
