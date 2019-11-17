@@ -12,10 +12,11 @@ vue ssr的种子项目
   - 运行服务启动命令： `npm run start`
 - [build-frist-finish version](https://github.com/muzi131313/vue-ssr-seed/tree/build-frist-finish)：最简单的构建版本，能打包出服务端 bundle 和客户端 bundle，不包含服务端开发模式和生产模式运行
   - 运行构建命令：`npm run build`
-- [run-dev-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-dev-server): 开发模式下运行服务的纯净版本
+- [run-dev-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-dev-server)：开发模式下运行服务的纯净版本
   - 运行命令：`npm run dev`
-- [run-prod-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-prod-server): 生产模式下运行服务的纯净版本
+- [run-prod-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-prod-server)：生产模式下运行服务的纯净版本
   - 运行命令：`npm run start`
+- [add-css-handle](https://github.com/muzi131313/vue-ssr-seed/tree/add-css-handle)：增加 sass 语法处理的版本
 
 ## 参考资料
 - 文档
