@@ -77,8 +77,10 @@ const isCacheable = req => {
 function render(req, res) {
   const start = Date.now()
 
+  const url = req ? req.url : ''
   const cacheable = isCacheable(req)
-  if (cacheable && isProd) {
+  const isShouldCache = url && cacheable && isProd
+  if (isShouldCache) {
     const hit = microCache.get(req.url)
     if (hit) {
       return res.end(hit)
@@ -96,6 +98,9 @@ function render(req, res) {
     if (err) {
       console.error(err)
       return res.status(500).end('Internal Server Error')
+    }
+    if (isShouldCache) {
+      microCache.set(req.url, html)
     }
     res.end(html)
     if (!isProd) {
