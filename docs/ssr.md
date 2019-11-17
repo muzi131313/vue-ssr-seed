@@ -31,8 +31,12 @@
       - 示例: [v-show](https://github.com/vuejs/vue/blob/dev/src/platforms/web/server/directives/show.js)
 
 ## 打包
+> 详情见，[webpack](./webpack.md) 打包文档
 ### 服务端打包
 - 服务端渲染：需要打包成 **服务器 bundle**
 
 ### 客户端打包
 - 客户端渲染：需要打包生成 **客户端 bundle** 发送给浏览器，用于 *混合静态标记*
+
+## 路由和代码分割
+

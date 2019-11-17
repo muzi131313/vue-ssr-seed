@@ -1,4 +1,15 @@
 ## 开发环境
+### 摘要
+- 获取动态信息
+  - 获取 *实时模板* `index.template.html` 信息
+  - 以及 *实时客户端 clientManifest.json* 信息
+  - 以及 *服务端 bundle.json* 信息
+- 还有热更新支持（webpack配置更改）
+- 获取动态信息后，返回给 `vue-server-renderer` 中的 `createBundleRenderer` 函数调用
+  ```
+  createBundleRenderer(bundle, { template, clientManifest })
+  ```
+
 ### 更新
 - `setup-dev-server` 中监听更新代码
   ```

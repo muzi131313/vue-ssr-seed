@@ -1,8 +1,8 @@
-- 安装 webpack 依赖
+- 安装 webpack 相关
   ```
   npm i webpack webpack-cli webpack-merge webpack-node-externals -D
   ```
-- 安装 loader
+- 安装 loader 相关
   ```
   npm i vue-loader vue-template-compiler css-loader babel-loader url-loader -D
   ```
@@ -26,8 +26,40 @@
   ```
   npm i webpack-dev-middleware -D
   ```
-- 配置 client-bundle
+- 基础 webpack 配置
+  ```javascript
+  module.exports = {
+    module: {
+      noParse: /es6-promise\.js$/, // avoid webpack shimming process
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          options: {
+            compilerOptions: {
+              preserveWhitespace: false
+            }
+          }
+        },
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          exclude: /node_modules/
+        },
+        {
+          test: /\.(png|jpg|gif|svg)$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: '[name].[ext]?[hash]'
+          }
+        }
+      ]
+    }
+  }
   ```
+- 配置 client-bundle
+  ```javascript
   const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
   module.exports = {
     entry: {
@@ -40,7 +72,7 @@
   }
   ```
 - 配置 server-bundle
-  ```
+  ```javascript
   const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
   module.exports = {
     entry: './src/entry-server.js',

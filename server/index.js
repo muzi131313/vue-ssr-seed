@@ -2,7 +2,7 @@ require('@babel/register')({
   presets: ['@babel/preset-env']
 })
 
-// const fs = require('fs')
+const fs = require('fs')
 const path = require('path')
 // const Vue = require('vue')
 const express = require('express')
@@ -41,15 +41,26 @@ function createRenderer(bundle, optoins) {
   }))
 }
 
-const setupDevServer = require('../build/setup-dev-server')
-readyPromise = setupDevServer(app, templatePath, (bundle, options) => {
-    try {
-      renderer = createRenderer(bundle, options)
-    }
-    catch (e) {
-      console.log('createRenderer exits error: ', e)
-    }
-})
+if (isProd) {
+  const bundle = require('../dist/vue-ssr-server-bundle.json')
+  const template = fs.readFileSync(templatePath, 'utf-8')
+  const clientManifest = require('../dist/vue-ssr-client-manifest.json')
+  renderer = createRenderer(bundle, {
+    template,
+    clientManifest
+  })
+}
+else {
+  const setupDevServer = require('../build/setup-dev-server')
+  readyPromise = setupDevServer(app, templatePath, (bundle, options) => {
+      try {
+        renderer = createRenderer(bundle, options)
+      }
+      catch (e) {
+        console.log('createRenderer exits error: ', e)
+      }
+  })
+}
 
 function render(req, res) {
   const start = Date.now()
@@ -79,9 +90,13 @@ app.use('/public', serve('../public', true))
 app.use('/manifest.json', serve('../manifest.json', true))
 app.use('/service-worker.js', serve('../dist/service-worker.js'))
 
-app.get('*', (req, res) => {
-  readyPromise.then(() => render(req, res))
-})
+const getAll = isProd
+  ? render
+  : (req, res) => {
+    readyPromise.then(() => render(req, res))
+  }
+
+app.get('*', getAll)
 
 const PORT = 8080
 app.listen(PORT, function(err) {
