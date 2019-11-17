@@ -74,3 +74,11 @@
   - 渲染后获取数据
     - 定义：路由跳转后获取数据
     - 适应场景：数据获取时间太长，渲染模块太多
+
+## 样式处理
+### 客户端
+- 样式兼容性：`postcss-loader`
+- 预处理器：`sass`
+- 生产模式下样式抽离：`mini-css-extract-plugin`
+### 服务端
+- 增加白名单，不处理样式：`externals: nodeExternals({ whitelist: /\.(css|vue)$/ })`

@@ -62,3 +62,6 @@
     }
   }
   ```
+  ## 参考资料
+  - [vue-loader#sass](https://vue-loader.vuejs.org/zh/guide/pre-processors.html#sass)
+  - [postcss-loader](https://www.npmjs.com/package/postcss-loader)
