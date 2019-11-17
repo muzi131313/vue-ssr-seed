@@ -62,8 +62,29 @@ else {
   })
 }
 
+const microCache = new LRU({
+  max: 100,
+  maxAge: 1000 * 60 * 5 // 重要提示：条目在 5 分钟后过期。
+})
+
+// 是否是可缓存页面
+const isCacheable = req => {
+  // 实现逻辑为，检查请求是否是用户特定(user-specific)。
+  // 只有非用户特定 (non-user-specific) 页面才会缓存
+  return true
+}
+
 function render(req, res) {
   const start = Date.now()
+
+  const cacheable = isCacheable(req)
+  if (cacheable && isProd) {
+    const hit = microCache.get(req.url)
+    if (hit) {
+      return res.end(hit)
+    }
+  }
+
   const context = {
     title: '',
     url: req ? req.url : ''
@@ -76,7 +97,7 @@ function render(req, res) {
       console.error(err)
       return res.status(500).end('Internal Server Error')
     }
-    res.send(html)
+    res.end(html)
     if (!isProd) {
       console.log(`whole request: ${Date.now() - start}ms`)
     }

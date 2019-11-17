@@ -17,6 +17,7 @@ vue ssr的种子项目
 - [run-prod-server](https://github.com/muzi131313/vue-ssr-seed/tree/run-prod-server)：生产模式下运行服务的纯净版本
   - 运行命令：`npm run start`
 - [add-css-handle](https://github.com/muzi131313/vue-ssr-seed/tree/add-css-handle)：增加 sass 语法处理的版本
+- [better](https://github.com/muzi131313/vue-ssr-seed/tree/better)：增加缓存的版本
 
 ## 参考资料
 - 文档
