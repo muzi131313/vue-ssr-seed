@@ -5,13 +5,39 @@
 - **micro-caching** 缓存策略
   - 场景：为所有用户渲染同样的页面
   - 实现
-    - nginx 配置
+    > 三选一
+
+    - Nginx 配置
       - [micro-caching](https://www.nginx.com/blog/benefits-of-microcaching-nginx/)
-    - NodeJS 实现
+      - Nginx 实现
+        ```
+        server {
+          proxy_cache one;
+          proxy_cache_lock on;
+          # 缓存数量 200，缓存有效时间 1s
+          proxy_cache_valid 200 1s;
+          proxy_cache_use_stale updating;
+          # ...
+        }
+        ```
+    - NodeJS 中使用 lru-cache 实现
       - 利用 `lru-cache`，根据 `req.url`，进行缓存
       - 缓存根据实际场景设置
         - 条数：可以缓存的数目（根据页面的总数量）
         - 时间：缓存失效时间（多少时间内总是使用缓存内的数据）
+    - NodeJS 中使用 route-cache 实现
+      - 安装依赖：`npm i route-cache -s`
+      - 实现代码
+        ```javascript
+        const microcache = require('route-cache')
+        // since this app has no user-specific content, every page is micro-cacheable.
+        // if your app involves user-specific content, you need to implement custom
+        // logic to determine whether a request is cacheable based on its url and
+        // headers.
+        // 5-minutes microcache.
+        // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+        app.use(microcache.cacheSeconds(60 * 5, req => useMicroCache && req.originalUrl))
+        ```
 - 组件级别缓存
   - 场景：适合 `for` 循环级别的组件
   - 不适合
