@@ -37,7 +37,13 @@ function createRenderer(bundle, optoins) {
     // this is only needed when vue-server-renderer is npm-linked
     basedir: resolve('../dist'),
     // recommended for performance
-    runInNewContext: false
+    runInNewContext: false,
+    // 不预加载非首页静态资源
+    shouldPrefetch(file, type) {
+      if (type === 'script' || type === 'style') {
+        return false
+      }
+    }
   }))
 }
 

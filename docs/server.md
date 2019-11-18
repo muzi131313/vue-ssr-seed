@@ -75,5 +75,17 @@
     })
   })
   ```
+- 关闭异步加载资源预获取
+  > 适用于非首页页面比较多的系统
 
+  ```javascript
+  const renderer = createBundleRenderer(bundle, Object.assign(optoins, {
+    shouldPrefetch(file, type) {
+      // 不预加载非首页静态资源
+      if (type === 'script' || type === 'style') {
+        return false
+      }
+    }
+  }))
+  ```
 
