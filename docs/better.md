@@ -2,10 +2,11 @@
 - babel-loader 增加缓存：加快打包速度
   - 实现：`loader: 'babel-loader?cacheDirectory'`
 ## 生产
-- [micro-caching](https://www.nginx.com/blog/benefits-of-microcaching-nginx/) 缓存策略
+- **micro-caching** 缓存策略
   - 场景：为所有用户渲染同样的页面
   - 实现
     - nginx 配置
+      - [micro-caching](https://www.nginx.com/blog/benefits-of-microcaching-nginx/)
     - NodeJS 实现
       - 利用 `lru-cache`，根据 `req.url`，进行缓存
       - 缓存根据实际场景设置
@@ -38,4 +39,99 @@
           serverCacheKey: props => props.item.id
         }
         ```
+    - 原理
+      - 逻辑
+        - 判断页面组件的 serverCacheKey 函数，name，以及 `createRenderer` 的 `cache` 选项 三个条件是否都满足
+          - 满足，则走缓存阶段
+            - 判断是否有 has 和 get 实现
+              - 有 has 实现
+                - 走 has 缓存逻辑
+                  - 第二个参数回调结果 hit 为 `false`
+                    - 走 **get 逻辑**
+                  - 第二个参数回调结果 hit 为 `true`
+                    - 返回 **缓存**
+              - 有 get 实现（*get 逻辑*）
+                - 走 get 缓存逻辑
+                  - 第二个参回调结果 `res` 为空
+                    - 第一次创建
+                  - 第二个参回调结果 `res` 有值
+                    - 返回 **缓存**
+            - 不满足
+              - 走 `renderComponentInner` 正常渲染逻辑
+        - 不满足
+          - 走 `renderComponentInner` 正常渲染逻辑
+      - 注意点
+        - 三个条件缺一不可，才会走组件缓存
+        - `has` 和 `get` 的不同
+          - `has`
+            - `has` 第二个参数的回调结果是 `hit`
+            - `has` 包含 `get` 逻辑
+          - `get`
+            - `get` 第二个参数的回调结果是 `res`
+      - 实践
+        - console 相关信息
+          ![console.png](http://ww1.sinaimg.cn/large/8c4687a3ly1g922sxj70yj20zi0iijve.jpg)
+        - 第一次运行组件缓存列表
+          ![first.png](http://ww1.sinaimg.cn/large/8c4687a3ly1g922tw3gp6j212y0qk78i.jpg)
+        - 第二次运行组件缓存列表
+          ![second.png](http://ww1.sinaimg.cn/large/8c4687a3ly1g922ub4wgbj21300qs0wy.jpg)
+      - <details>
+          <summary>源码实现</summary>
 
+          ```javascript
+          function isDef (v) {
+            return v !== undefined && v !== null
+          }
+          function renderComponent (node, isRoot, context) {
+            var getKey = Ctor.options.serverCacheKey;
+            var name = Ctor.options.name;
+            var cache = context.cache;
+            if (isDef(getKey) && isDef(cache) && isDef(name)) {
+              // 调用自定义函数 serverCacheKey，如果能获取到值，则开始组件缓存阶段，否则执行 renderComponentInner 的逻辑
+              var rawKey = getKey(node.componentOptions.propsData);
+              if (rawKey === false) {
+                renderComponentInner(node, isRoot, context);
+                return
+              }
+              // 判断是否有 has 和 get 的实现
+              if (isDef(has)) {
+                has(key, function (hit) {
+                  // 判断是否有 get 的实现
+                  if (hit === true && isDef(get)) {
+                    get(key, function (res) {
+                      if (isDef(registerComponent)) {
+                        registerComponent(userContext);
+                      }
+                      res.components.forEach(function (register) { return register(userContext); });
+                      write(res.html, next);
+                    });
+                  }
+                  // 走 set 缓存
+                  else {
+                    renderComponentWithCache(node, isRoot, key, context);
+                  }
+                });
+              }
+              else if (isDef(get)) {
+                get(key, function (res) {
+                  // 判断是否有 res 的实现
+                  if (isDef(res)) {
+                    if (isDef(registerComponent)) {
+                      registerComponent(userContext);
+                    }
+                    res.components.forEach(function (register) { return register(userContext); });
+                    write(res.html, next);
+                  }
+                  // 走 get 缓存
+                  else {
+                    renderComponentWithCache(node, isRoot, key, context);
+                  }
+                });
+              }
+            } else {
+              // 走 renderComponentInner
+              renderComponentInner(node, isRoot, context);
+            }
+          }
+          ```
+        </details>

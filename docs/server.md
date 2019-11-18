@@ -5,7 +5,7 @@
     const LRU = require('lru-cache')
     const lru = new LRU({})
     ```
-- 安装 [compression](https://www.npmjs.com/package/compression)：代码压缩组件
+- 安装 [compression](https://www.npmjs.com/package/compression)：代码gzip压缩组件
   - `npm i compression -s`
   - 应用: `app.use(compression({}))`
 
