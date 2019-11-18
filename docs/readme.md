@@ -1,7 +1,7 @@
 ## 文档总览
 - [eslint](./eslint.md)：代码格式规范
 - [use-es6-in-node](./use-es6-in-node.md)：`Node` 中使用 `ES6` (主要支持 `export`/`import`)
-- [ ] [ssr](./ssr.md)：服务端渲染文档规范，以及要点说明
+- [ssr](./ssr.md)：服务端渲染文档规范，以及要点说明
 - [prefetching-preloading-prebrowsing](./prefetching-preloading-prebrowsing.md)：预加载
 - [server](./server.md)：服务端代码说明文档
 - [pwa](./pwa.md)：离线缓存应用
@@ -11,4 +11,5 @@
 - [prod](./prod.md)：生产模式下，服务端需要做的一些事情
 - [router](./router.md)：路由模式下，客户端路由加载模式，服务端路由处理，以及数据预获取
 - [css](./css.md)：样式模块，样式兼容、样式预处理器编译、样式抽离成静态文件
+- [log](./log.md)：日志模块，记录服务端自定义日志
 - [better](./better.md)：性能优化模块

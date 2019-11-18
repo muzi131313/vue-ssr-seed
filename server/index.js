@@ -10,6 +10,7 @@ const LRU = require('lru-cache')
 const compression = require('compression')
 const favicon = require('serve-favicon')
 const { createBundleRenderer } = require('vue-server-renderer')
+const logger = require('./utils/logger')
 
 const resolve = _path => path.resolve(__dirname, _path)
 const serve = (path, cache) => express.static(resolve(path), {
@@ -98,12 +99,33 @@ function render(req, res) {
     url: req ? req.url : ''
   }
 
+  const handleError = err => {
+    logger.info('render handle Error: ')
+    logger.info(err)
+    if (err.url) {
+      res.redirect(err.url)
+    }
+    else if (err.code === 404) {
+      if (err.url === URL_404) {
+        res.status(404).end(MSG_404)
+      }
+      else {
+        res.redirect('/missing')
+      }
+    }
+    else {
+      logger.error(`error during render : ${req.url}`)
+      logger.error(err.stack)
+      // Render Error Page or Redirect
+      res.status(500).end(MSG_500)
+    }
+  }
+
   res.setHeader('Content-Type', 'text/html')
   res.setHeader('Server', serverInfo)
   renderer.renderToString(context, (err, html) => {
     if (err) {
-      console.error(err)
-      return res.status(500).end('Internal Server Error')
+      return handleError(err)
     }
     if (isShouldCache) {
       microCache.set(req.url, html)

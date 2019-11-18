@@ -88,4 +88,27 @@
     }
   }))
   ```
-
+- 错误处理
+  ```javascript
+  const handleError = err => {
+    logger.info('render handle Error: ')
+    logger.info(err)
+    if (err.url) {
+      res.redirect(err.url)
+    }
+    else if (err.code === 404) {
+      if (err.url === URL_404) {
+        res.status(404).end(MSG_404)
+      }
+      else {
+        res.redirect('/missing')
+      }
+    }
+    else {
+      logger.error(`error during render : ${req.url}`)
+      logger.error(err.stack)
+      // Render Error Page or Redirect
+      res.status(500).end(MSG_500)
+    }
+  }
+  ```

@@ -2,3 +2,4 @@ node_modules
 dist_node
 dist
 .vscode
+server/logs
