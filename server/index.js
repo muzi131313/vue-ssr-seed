@@ -14,7 +14,8 @@ const logger = require('./utils/logger')
 
 const resolve = _path => path.resolve(__dirname, _path)
 const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+  // 1天
+  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 1 : 0
 })
 
 let readyPromise = null
