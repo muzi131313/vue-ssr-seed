@@ -30,14 +30,36 @@
       - 实现代码
         ```javascript
         const microcache = require('route-cache')
+        const useMicroCache = process.env.MICRO_CACHE !== 'false'
         // since this app has no user-specific content, every page is micro-cacheable.
         // if your app involves user-specific content, you need to implement custom
         // logic to determine whether a request is cacheable based on its url and
         // headers.
         // 5-minutes microcache.
         // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-        app.use(microcache.cacheSeconds(60 * 5, req => useMicroCache && req.originalUrl))
+        app.use(microcache.cacheSeconds(1000 * 60 * 5, req => useMicroCache && req.originalUrl))
         ```
+      - [route-cache/index.js](https://github.com/bradoyler/route-cache/blob/master/index.js)
+        - [lru-cache#options](https://www.npmjs.com/package/lru-cache#options)
+          - `max`: 缓存最大体积, Number类型, 如果设置为 0，则为 `Infinity`(默认值)
+          - `maxAge`: 缓存最大时间
+          - `length`: 计算存储项的长度
+        - 默认选项
+          - `max`: `64mb`
+          - `length`
+            ```javascript
+            function (n, key) {
+              if (n.body && typeof n.body === 'string') {
+                return n.body.length
+              }
+              return 1
+            }
+            ```
+          - `maxAge`: `200ms`
+        - 重写了 `res.send`, `res.end`, `res.json`, `res.redirect`
+        - 对于 `res.send` 和 `res.json`: 如果有缓存值，直接返回缓存值；否则重新进行缓存
+        - 对于 `res.send` 和 `res.redirect`: 增加一个队列, 最后在 `process.nextTick()` 处理队列中的回调
+
 - 组件级别缓存
   - 场景：适合 `for` 循环级别的组件
   - 不适合
